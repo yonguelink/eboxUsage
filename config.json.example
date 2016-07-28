@@ -1,5 +1,6 @@
 {
 	"url": "http://conso.ebox.ca",
-	"clientCode": "<your client code here>",
+	"clientCode": "<client code>",
+	"outputFile": "data.txt",
 	"jQueryUrl": "https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"
 }

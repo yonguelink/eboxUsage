@@ -1,8 +1,7 @@
-//Time to wait for page load
-var timeoutExit = 1000;
-var canExit = true;
-var isFirst = false;
+//Requires
 var fs = require('fs');
+var isFirst = false;
+
 //Settings
 var settings = loadConfigs("../config.json");
 
@@ -24,15 +23,13 @@ page.onLoadFinished = function(){
 		isFirst = true;
 	}else{
 		var text = evaluateOtherPage();
-		canExit = true;
 		end(text);
 	}
 };
-/*
+
 page.open(settings.url, function(status) {
-  console.log("Status: " + status);
   if(status === "success") {
-	  page.includeJs("http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js", function() {
+	  page.includeJs(settings.jQueryUrl, function() {
 		  page.evaluate(function(settings){
 			  var formdata = document.formSearchACO;
 			  formdata.code.value = settings.clientCode;
@@ -42,20 +39,20 @@ page.open(settings.url, function(status) {
   }
   
 });
-*/
+
 function evaluateOtherPage(){
-	//Wait for the 2nd page to have loaded
-	if(!isFirst){
-		setTimeout(evaluateOtherPage, timeoutExit);
-	}else{
-		var maxUsage = $(".nobr:contains('Total')>div").text();
-		maxUsage.substring(maxUsage.lastIndexOf(":")+1, maxUsage.length)
-	}
+	var text = page.evaluate(function(){
+		var maxUsage = $(".nobr:contains('total')>div").text();
+		maxUsage = maxUsage.substring(maxUsage.lastIndexOf(":")+2, maxUsage.length);
+		var currentUsage = $(".nobr:contains('Available')>div").text();
+		currentUsage = currentUsage.substring(currentUsage.lastIndexOf(":")+2, currentUsage.length);
+		return currentUsage + "/" + maxUsage;
+	});
+	return text;
 }
 
 function end(text){
-	page.render("lol.png");
-	var path = 'output.txt';
+	var path = settings.outputFile;
 	fs.write(path, text, 'w');
 	phantom.exit();
 }
