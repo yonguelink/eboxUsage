@@ -34,8 +34,9 @@ page.open(settings.url, function(status) {
   if(status === "success") {
 	  page.includeJs(settings.jQueryUrl, function() {
 		  page.evaluate(function(settings){
-			  var formdata = document.formSearchACO;
-			  formdata.code.value = settings.clientCode;
+			  var formdata = document.formLogin;
+			  formdata.usrname.value = settings.clientCode;
+			  formdata.pwd.value = settings.clientPass;
 			  formdata.submit();
 		  }, settings);
 	  });
@@ -45,12 +46,13 @@ page.open(settings.url, function(status) {
 
 function evaluateOtherPage(){
 	var text = page.evaluate(function(){
-		var maxUsage = $(".nobr:contains('total')>div").text();
-		maxUsage = maxUsage.substring(maxUsage.lastIndexOf(":")+2, maxUsage.length);
-		var currentUsage = $(".nobr:contains('Available')>div").text();
-		currentUsage = currentUsage.substring(currentUsage.lastIndexOf(":")+2, currentUsage.length);
-		return currentUsage + "/" + maxUsage;
+		var unCleanText = $(".text_summary3").text().trim().replace("\n", " ");
+		while(unCleanText.indexOf("\t") > -1)unCleanText = unCleanText.replace("\t", "");
+		while(unCleanText.indexOf("o") > -1)unCleanText = unCleanText.replace("o", "");
+		unCleanText = unCleanText.replace(" / ", "/");
+		return unCleanText;
 	});
+	console.log("Text", text);
 	return text;
 }
 
