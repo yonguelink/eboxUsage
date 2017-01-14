@@ -1,9 +1,12 @@
+//Only info that cannot be placed in the config file
+var configFile = "config.json";
+
 //Requires
 var fs = require('fs');
 var isFirst = false;
 
 //Settings
-var settings = loadConfigs("../config.json");
+var settings = loadConfigs(configFile);
 
 function loadConfigs(path){
 	var data = fs.read(path);
