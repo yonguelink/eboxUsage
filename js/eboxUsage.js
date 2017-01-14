@@ -52,7 +52,6 @@ function evaluateOtherPage(){
 		unCleanText = unCleanText.replace(" / ", "/");
 		return unCleanText;
 	});
-	console.log("Text", text);
 	return text;
 }
 
